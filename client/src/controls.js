@@ -26,7 +26,9 @@ const Controls = (player, id, socket, coinsArray) => {
       id: id,
       x: player.current.position.x,
       z: player.current.position.z,
+      point: 0,
     };
+
     setMyMoveInfo(myIno);
     console.log("myIno", myIno);
 
@@ -40,11 +42,7 @@ const Controls = (player, id, socket, coinsArray) => {
     });
     console.log("target", target);
     if (target.length > 0) {
-      socket.emit("coin-taken", target[0].id);
-      console.log("target", target[0].id);
-      // setCoinsArrayAtom((oldArray) => {
-      //   return oldArray.filter((coin) => coin.id !== target[0].id);
-      // });
+      socket.emit("coin-taken", target[0].id, myIno.id);
     }
     socket.emit("move-myPlayer", myIno);
   };

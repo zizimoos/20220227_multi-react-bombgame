@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import { Suspense } from "react";
@@ -25,23 +25,20 @@ const CanvasContainer = styled.div`
 `;
 
 function App() {
-  const [PlayerArry, setPlayerArry] = React.useState([]);
-  const [myId, setMyId] = React.useState("");
-  const [coinsArray, setCoinsArray] = React.useState([]);
+  const [PlayerArry, setPlayerArry] = useState([]);
+  const [myId, setMyId] = useState("");
+  const [coinsArray, setCoinsArray] = useState([]);
 
   socket.on("init", ({ id, playersArrayServer, coinsArrayServer }) => {
     setMyId(id);
     setPlayerArry(playersArrayServer);
     setCoinsArray(coinsArrayServer);
 
-    // console.log("coinsArrayORIGIN", coinsArray);
-
     socket.on("move-otherPlayer", (playersArrayServer) => {
       setPlayerArry(playersArrayServer);
     });
     socket.on("coin-destroied", (coinsArrayServer) => {
       setCoinsArray(coinsArrayServer);
-      // console.log("coinsArrayDESTROIED", coinsArray);
     });
   });
 
