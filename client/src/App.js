@@ -11,8 +11,6 @@ import Player from "./components/Player";
 import io from "socket.io-client";
 import Coin from "./components/Coin";
 import OtherPlayers from "./components/OtherPlayers";
-import { useRecoilState } from "recoil";
-import { coinArrayAtom } from "./atoms";
 
 const socket = io("http://localhost:3001");
 
@@ -30,13 +28,12 @@ function App() {
   const [PlayerArry, setPlayerArry] = React.useState([]);
   const [myId, setMyId] = React.useState("");
   const [coinsArray, setCoinsArray] = React.useState([]);
-  const [coinsArrayAtom, setCoinsArrayAtom] = useRecoilState(coinArrayAtom);
 
   socket.on("init", ({ id, playersArrayServer, coinsArrayServer }) => {
     setMyId(id);
     setPlayerArry(playersArrayServer);
     setCoinsArray(coinsArrayServer);
-    setCoinsArrayAtom(coinsArrayServer);
+
     // console.log("coinsArrayORIGIN", coinsArray);
 
     socket.on("move-otherPlayer", (playersArrayServer) => {
@@ -77,7 +74,7 @@ function App() {
               // </group>
             );
           })}
-          {coinsArrayAtom.map((coin, index) => {
+          {coinsArray.map((coin, index) => {
             return <Coin key={index} id={coin.id} x={coin.x} z={coin.z} />;
           })}
 

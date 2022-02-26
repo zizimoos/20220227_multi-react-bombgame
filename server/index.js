@@ -63,6 +63,7 @@ io.on("connection", (socket) => {
     coinsArrayServer = [...updateArray];
     console.log("UPDATE_coinsArrayServer", coinsArrayServer);
     socket.broadcast.emit("coin-destroied", coinsArrayServer);
+    socket.emit("coin-destroied", coinsArrayServer);
   });
 
   socket.on("disconnect", () => {

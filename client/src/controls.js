@@ -1,10 +1,10 @@
 import React from "react";
-import { useRecoilState } from "recoil";
-import { coinArrayAtom } from "./atoms";
+// import { useRecoilState } from "recoil";
+// import { coinArrayAtom } from "./atoms";
 
 const Controls = (player, id, socket, coinsArray) => {
   const [myMoveInfo, setMyMoveInfo] = React.useState({});
-  const [coinsArrayAtom, setCoinsArrayAtom] = useRecoilState(coinArrayAtom);
+  // const [coinsArrayAtom, setCoinsArrayAtom] = useRecoilState(coinArrayAtom);
 
   document.onkeydown = (e) => {
     switch (e.keyCode) {
@@ -42,9 +42,9 @@ const Controls = (player, id, socket, coinsArray) => {
     if (target.length > 0) {
       socket.emit("coin-taken", target[0].id);
       console.log("target", target[0].id);
-      setCoinsArrayAtom((oldArray) => {
-        return oldArray.filter((coin) => coin.id !== target[0].id);
-      });
+      // setCoinsArrayAtom((oldArray) => {
+      //   return oldArray.filter((coin) => coin.id !== target[0].id);
+      // });
     }
     socket.emit("move-myPlayer", myIno);
   };
