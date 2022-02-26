@@ -1,9 +1,9 @@
 import React, { useRef } from "react";
 import Controls from "../controls";
 
-function Player({ id, socket }) {
+function Player({ id, socket, coinsArray }) {
   const myMove = useRef(null);
-  Controls(myMove, id, socket);
+  Controls(myMove, id, socket, coinsArray);
 
   return (
     <group ref={myMove}>

@@ -1,7 +1,11 @@
 import React from "react";
+import { useRecoilState } from "recoil";
+import { coinArrayAtom } from "./atoms";
 
-const Controls = (player, id, socket) => {
+const Controls = (player, id, socket, coinsArray) => {
   const [myMoveInfo, setMyMoveInfo] = React.useState({});
+  const [coinsArrayAtom, setCoinsArrayAtom] = useRecoilState(coinArrayAtom);
+
   document.onkeydown = (e) => {
     switch (e.keyCode) {
       case 37:
@@ -25,6 +29,23 @@ const Controls = (player, id, socket) => {
     };
     setMyMoveInfo(myIno);
     console.log("myIno", myIno);
+
+    let target = coinsArray.filter((coin) => {
+      return (
+        coin.x <= myIno.x + 1 &&
+        coin.x >= myIno.x - 1 &&
+        coin.z <= myIno.z + 1 &&
+        coin.z >= myIno.z - 1
+      );
+    });
+    console.log("target", target);
+    if (target.length > 0) {
+      socket.emit("coin-taken", target[0].id);
+      console.log("target", target[0].id);
+      setCoinsArrayAtom((oldArray) => {
+        return oldArray.filter((coin) => coin.id !== target[0].id);
+      });
+    }
     socket.emit("move-myPlayer", myIno);
   };
 };

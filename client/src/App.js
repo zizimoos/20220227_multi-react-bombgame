@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 
 import { Suspense } from "react";
-import { Canvas, useLoader } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 
 import GroundField from "./components/GroundField";
@@ -11,6 +11,8 @@ import Player from "./components/Player";
 import io from "socket.io-client";
 import Coin from "./components/Coin";
 import OtherPlayers from "./components/OtherPlayers";
+import { useRecoilState } from "recoil";
+import { coinArrayAtom } from "./atoms";
 
 const socket = io("http://localhost:3001");
 
@@ -28,16 +30,21 @@ function App() {
   const [PlayerArry, setPlayerArry] = React.useState([]);
   const [myId, setMyId] = React.useState("");
   const [coinsArray, setCoinsArray] = React.useState([]);
-  const [coinId, setCoinId] = React.useState(0);
+  const [coinsArrayAtom, setCoinsArrayAtom] = useRecoilState(coinArrayAtom);
 
   socket.on("init", ({ id, playersArrayServer, coinsArrayServer }) => {
     setMyId(id);
     setPlayerArry(playersArrayServer);
     setCoinsArray(coinsArrayServer);
-    console.log(coinsArray);
+    setCoinsArrayAtom(coinsArrayServer);
+    // console.log("coinsArrayORIGIN", coinsArray);
 
     socket.on("move-otherPlayer", (playersArrayServer) => {
       setPlayerArry(playersArrayServer);
+    });
+    socket.on("coin-destroied", (coinsArrayServer) => {
+      setCoinsArray(coinsArrayServer);
+      // console.log("coinsArrayDESTROIED", coinsArray);
     });
   });
 
@@ -52,7 +59,7 @@ function App() {
           castShadow
         />
         <Suspense fallback={null}>
-          <Player id={myId} socket={socket} />
+          <Player id={myId} socket={socket} coinsArray={coinsArray} />
           {PlayerArry.map((otherPlayer, index) => {
             console.log(otherPlayer);
             return (
@@ -70,7 +77,7 @@ function App() {
               // </group>
             );
           })}
-          {coinsArray.map((coin, index) => {
+          {coinsArrayAtom.map((coin, index) => {
             return <Coin key={index} id={coin.id} x={coin.x} z={coin.z} />;
           })}
 
