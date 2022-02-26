@@ -23,7 +23,7 @@ const io = new Server(server, {
 
 let playersArrayServer = [];
 let coinsArrayServer = [];
-for (i = 0; i < 50; i++) {
+for (i = 0; i < 5; i++) {
   coinsArrayServer.push({
     id: i,
     x: Math.random() * 80 - 40,
@@ -54,6 +54,15 @@ io.on("connection", (socket) => {
     player.id = socket.id;
     playersArrayServer.push(player);
     socket.broadcast.emit("new-player", player);
+  });
+
+  socket.on("coin-taken", (target) => {
+    const updateArray = coinsArrayServer.filter((coin) => coin.id !== target);
+    console.log("updateArray", updateArray);
+    console.log("coinsArrayServer", coinsArrayServer);
+    coinsArrayServer = [...updateArray];
+    console.log("UPDATE_coinsArrayServer", coinsArrayServer);
+    socket.broadcast.emit("coin-destroied", coinsArrayServer);
   });
 
   socket.on("disconnect", () => {
